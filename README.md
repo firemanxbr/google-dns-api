@@ -12,10 +12,6 @@ Open Source tool to management domains in Google Cloud DNS using JSON files.
 
     `$ gcloud auth application-default login` 
 
-3. Create a new zone
-
-    `$ python3 main.py create NAME-OF-ZONE DOMAIN.COM. "DESCRIPTION"`
-
 
 ## Requirements 
 
