@@ -1,0 +1,2 @@
+google-api-python-client>=1.6.2
+google-cloud-dns>=0.25.0
