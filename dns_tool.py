@@ -1,10 +1,20 @@
-"""Open Source tool to management domains in Google Cloud DNS
-    using JSON files
+"""Google Cloud Platform DNS Tool
+
+    This is an open source tool to management domains
+    in Google Cloud DNS using JSON files as reference
 
     more informations please consulte the README.md
 """
+import json
 import time
-from google.cloud import dns
+
+from argparse import ArgumentParser
+
+try:
+    from google.cloud import dns
+except ImportError:
+    print('please check the requeriments.txt and README.md')
+    exit()
 
 
 def client_conn(project_id=None):
@@ -16,6 +26,20 @@ def client_conn(project_id=None):
     """
     client = dns.Client(project=project_id)
     return client
+
+
+def check_zone(name):
+    """Check if the zone exists
+
+    :param name: a name of the new zone
+    
+    :returns: True if the zone name exist
+    """
+    client = client_conn()
+    zones = client.list_zones()
+    for zone in zones:
+        if zone.name == name:
+            return True
 
 
 def create_zone(name, dns_name, description):
@@ -77,18 +101,24 @@ def create_record(name, dns_name, record_name, record_type, ttl, value):
 
 
 if __name__ == '__main__':
-    """print (create_zone('product',
-                       'product.example.com.',
-                       'domain used of blog product.example.com'))"""
-    print (create_record('product',
-                         'product.example.com.',
-                         '4eef4a76dfb2072eb7cba2a2263278cf.product.example.com.',
-                         'CNAME',
-                         3600,
-                         ['388ba5b47e181376c968bf08550b68de538c1f38.comodoca.com.']))
-    print (create_record('product',
-                         'product.example.com.',
-                         'product.example.com.',
-                         'A',
-                         3600,
-                         ["52.0.16.118","52.1.119.170","52.1.147.205","52.1.173.203","52.4.145.119","52.4.175.111","52.4.225.124","52.4.240.221","52.4.38.70","52.5.181.79","52.6.3.192","52.6.46.142"]))
+    parser = ArgumentParser()
+    parser.add_argument('-f', '--file', help="your json file", required=True)
+    args = parser.parse_args()
+
+    if args.file:
+
+        with open(args.file, 'r') as f:
+            data = json.load(f)
+
+            if check_zone(name=data['name']) is not True:
+                create_zone(name=data['name'],
+                            dns_name=data['zone'],
+                            description=data['description'])
+
+            for reg in range(len(data['records'])):
+                create_record(name=data['name'],
+                              dns_name=data['zone'],
+                              record_name=data['records'][reg]['name'],
+                              record_type=data['records'][reg]['type'],
+                              ttl=data['records'][reg]['ttl'],
+                              value=data['records'][reg]['value'])

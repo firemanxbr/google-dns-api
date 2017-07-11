@@ -1,34 +1,58 @@
-# Google Cloud DNS API 
-Open Source tool to management domains in Google Cloud DNS using JSON files.
+# Google Cloud Platform DNS Tool 
+This is an open source tool to management domains in Google Cloud DNS using JSON files as reference.
 
+You can use the Jenkins or other CI for automate this task!
 
-## How-to use
+Benetifs about this tool:
++ All domains are versioned in Git repositories
++ All domains are based in JSON files
++ Create new zones and records
 
-1. Configure the project in GCP
+This tool was created using **Python >= 3.6**
+
+## How-to use in 5 steps
+
+1. Configure the project of GCP
 
     `$ gcloud config set project GCP_PROJECT_ID`
 
-2. Save the credentials
+2. Save your credentials
 
     `$ gcloud auth application-default login` 
 
+3. Install the requirements
 
-## Requirements 
+    `$ pip3 install -r requirements.txt`
 
-Python >= 3.6 
+4. Create your domain using this structure into a json file, for example:
+```
+{
+    "zone": "dns-name-of-your-zone.com.",
+    "name": "name-of-your-zone-in-google-dns",
+    "description": "reference about this zone, documentation purpose",
+    "records": [
+        {
+            "name": "dns-name-of-your-zone.com.",
+            "type": "A",
+            "ttl": 3600,
+            "value": ["8.8.8.8",
+                    "8.8.4.4"]
+        },
+        {
+            "name": "google.dns-name-of-your-zone.com.",
+            "type": "CNAME",
+            "ttl": 3600,
+            "value": ["google.com."]
+        }
+    ]
+}
+```
 
-`$ pip3 install -r requirements.txt` 
+5. Run the tool
+
+    `$ python3 dns_tool.py -f my-domain-file.json`
 
 
 ## Reference
 
-[Google Cloud DNS JSON Records](https://cloud.google.com/dns/records/json-record)
-
-
-## Tools 
-
-[DNS - Check Configuration](http://dnscheck.pingdom.com/)
-
-[DNS - Check MX](https://toolbox.googleapps.com/apps/checkmx/) 
-
-[DNS - Check Dig](https://toolbox.googleapps.com/apps/dig/)
+[Google Cloud DNS](https://cloud.google.com/dns/)
