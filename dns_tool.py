@@ -13,7 +13,7 @@ from argparse import ArgumentParser
 try:
     from google.cloud import dns
 except ImportError:
-    print('please check the requeriments.txt and README.md')
+    print('please check the requiriments.txt and README.md')
     exit()
 
 
@@ -32,7 +32,7 @@ def check_zone(name):
     """Check if the zone exists
 
     :param name: a name of the new zone
-    
+
     :returns: True if the zone name exist
     """
     client = client_conn()
@@ -97,7 +97,6 @@ def create_record(name, dns_name, record_name, record_type, ttl, value):
 
     except BaseException:
         return "the record %s already exists" % record_name
-
 
 
 if __name__ == '__main__':
